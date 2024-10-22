@@ -1,0 +1,2 @@
+User class
+write down persistent data structure
