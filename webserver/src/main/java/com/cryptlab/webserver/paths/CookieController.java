@@ -1,6 +1,8 @@
 package com.cryptlab.webserver.paths;
 
 import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,21 +14,31 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-//switch to using responsecookie in vector
-//read cookies
-//delete expired cookies
-//send new generated cookie if cookie expired
+class CookieData {
+    public long duration;
+    public long timestamp;
+    public String value;
+
+    public CookieData (long duration, long timestamp, String value) {
+        this.duration = duration;
+        this.timestamp = timestamp;
+        this.value = value;
+    }
+}
+
 
 @RestController
 public class CookieController {
-    private Vector<String> cookies;
+    private Vector<CookieData> cookies;
 
     public CookieController () {
         cookies = new Vector<>();
-
+        readCookies();
     }
 
     private String generateCookie () {
@@ -40,19 +52,35 @@ public class CookieController {
     }
 
     private boolean addCookie (String cookie) {
-        if (cookies.contains(cookie)) {
-            return false;
+        for (CookieData rc : cookies) {
+            if (rc.value.equals(cookie)) {
+                return false;
+            }
         }
-        cookies.add(cookie);
+        cookies.add( 
+            new CookieData(10000, System.currentTimeMillis(), cookie)
+        );
         saveCookies();
         return true;
     }
 
     private boolean cookieExist (String cookie) {
-        return cookies.contains(cookie);
+        for (CookieData rc : cookies) {
+            if (rc.value.equals(cookie)) {
+                return true;
+            }
+        }
+        return false;
     }
     private boolean deleteCookie (String cookie) {
-        if (cookies.remove(cookie)) {
+        int index = -1;
+        for (int i = 0; i < cookies.size(); i++) {
+            if (cookies.get(i).value.equals(cookie)) {
+                index = i;
+                break;
+            }
+        }
+        if (index >= 0 && cookies.remove(index) != null) {
             File f = new File("cookies");
             if (f.exists()) {
                 f.delete();
@@ -65,8 +93,8 @@ public class CookieController {
 
     private void saveCookies () {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("cookies"))) {
-            for (String i : cookies) {
-                bw.write(i + "\n");
+            for (CookieData i : cookies) {
+                bw.write(i.value + "," + i.duration + "," + i.timestamp + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,7 +102,44 @@ public class CookieController {
     }
 
     private void readCookies () {
+        File f = new File("cookies");
+        if (!f.exists()) {
+            return;
+        }
 
+        try (BufferedReader br = new BufferedReader(new FileReader("cookies"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] arr = line.split(",");
+                if (arr.length == 3) {
+                    String value = arr[0];
+                    long dur = Long.parseLong(arr[1]);
+                    long timestamp = Long.parseLong(arr[2]);
+                    cookies.add(new CookieData(dur, timestamp, value));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private CookieData getCookie (String cookie) {
+        for (CookieData i : cookies) {
+            if (i.value.equals(cookie)) {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    private boolean checkExpired (CookieData cookie) {
+        long current = System.currentTimeMillis();
+        long total = cookie.duration + cookie.timestamp;
+        if (total <= current) {
+            deleteCookie(cookie.value);
+            return true;
+        }
+        return false;
     }
 
     @GetMapping("/new_cookie")
@@ -90,7 +155,7 @@ public class CookieController {
         ResponseCookie cookie = ResponseCookie.from("login-cookie", cookie_string)
         .httpOnly(true)
         .secure(true)
-        .maxAge(100)
+        .maxAge(10000)
         .build();
 
         return ResponseEntity
@@ -99,14 +164,19 @@ public class CookieController {
         .build();
     }
     @GetMapping("/set_cookie")
-    public ResponseEntity<String> setCookie(@RequestParam String param) {
-        if (cookieExist(param)) {
+    public ResponseEntity<String> setCookie(@RequestParam String logincookie) {
+        CookieData cookie = getCookie(logincookie);
+        if (cookie != null && checkExpired(cookie)) {
+            deleteCookie(logincookie);
+            System.out.println("Deleted requested cookie");
+        }
+        else if (cookieExist(logincookie)) {
             return ResponseEntity
             .ok()
             .build();
         }
         return ResponseEntity
-        .notFound()
+        .status(406)
         .build();
     }
     
