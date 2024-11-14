@@ -1,9 +1,15 @@
 package com.cryptlab.webserver.api_backends;
 
+import com.cryptlab.webserver.WebserverApplication;
+
 import com.amadeus.Amadeus;
 import com.amadeus.Params;
+import com.amadeus.exceptions.ResponseException;
+import com.amadeus.referencedata.Locations;
+import com.amadeus.resources.Location;
+import com.amadeus.resources.CheckinLink;
 import com.amadeus.resources.DatedFlight;
-import com.cryptlab.webserver.WebserverApplication;
+
 import com.data_objects.TripResponse;
 import com.data_objects.TripResponse.SegmentResponse;
 import com.data_objects.TripRequest.SegmentRequest;
@@ -12,10 +18,14 @@ public class FlightAPI {
 
   Amadeus amadeus;
 
+  //string used in place of members who don't have a value currently
+  private static final String noValueString ="None";
+
   public FlightAPI() {
     amadeus = WebserverApplication.getAmadeusObject();
   }
 
+  //turns a Segment Request into a Segment Reponse
   public SegmentResponse getFlightStatus(SegmentRequest segment) {
     // System.out.println("[flightAPI] getting flight data for: " + segment.airlineIATA() + segment.flightNumber() + " on: " + segment.departureDate());
 
@@ -32,56 +42,51 @@ public class FlightAPI {
       return null;
     }
     var flight = flightStatus[0];
+    // System.out.println(flight);
 
-    String dateTime = flight.getScheduledDepartureDate();
     String airline = flight.getFlightDesignator().getCarrierCode();
     int flightNumber = flight.getFlightDesignator().getFlightNumber();
     String aircraftType = flight.getLegs()[0].getAircraftEquipment().getAircraftType();
     String duration = flight.getSegments()[0].getScheduledSegmentDuration();
     String origin = flight.getSegments()[0].getBoardPointIataCode();
     String destination = flight.getLegs()[0].getOffPointIataCode();
-
+    
     var departure = flight.getFlightPoints()[0].getDeparture();
+    String dateTime = departure.getTimings()[0].getValue();
     var tempGate = departure.getGate();
-    String originGate = (tempGate == null) ? "N/A" : tempGate.getMainGate();
+    String originGate = (tempGate == null) ? noValueString : tempGate.getMainGate();
     var tempTerminal = departure.getTerminal();
-    String originTerminal = (tempTerminal == null) ? "N/A" : tempTerminal.getCode();
-
-    String destinationGate, destinationTerminal;
+    String originTerminal = (tempTerminal == null) ? noValueString : tempTerminal.getCode();
+    
     var arrival = flight.getFlightPoints()[1].getArrival();
-    if(arrival == null) {
-      destinationGate = "N/A2";
-      destinationTerminal = "N/A2";
-    } else {
-      tempGate = arrival.getGate();
-      destinationGate = (tempGate == null) ? "N/A" : tempGate.getMainGate();
-      tempTerminal = arrival.getTerminal();
-      destinationTerminal = (tempTerminal == null) ? "N/A" : tempTerminal.getCode();
+    tempGate = arrival.getGate();
+    String destinationGate = (tempGate == null) ? noValueString : tempGate.getMainGate();
+    tempTerminal = arrival.getTerminal();
+    String destinationTerminal = (tempTerminal == null) ? noValueString : tempTerminal.getCode();
+
+    Location[] originLocation;
+    Location[] destinationLocation;
+    try {
+      originLocation = amadeus.referenceData.locations.get(Params.with("keyword", origin).and("subType", Locations.ANY));
+      destinationLocation = amadeus.referenceData.locations.get(Params.with("keyword", destination).and("subType", Locations.ANY));
+      if(originLocation.length < 1 || destinationLocation.length < 1) throw new Exception("locations find failure!");
+    } catch (Exception e) {
+      System.out.println("[FlightAPI.getFlightStatus] an error has occured: " + e.getMessage());
+      return null;
     }
 
-    String onTimePrediction = null;
-      // segment.addProperty("onTimePrediction", flight.getLegs()[0].getOnTimePrediction());
+    Double originAirporLatitude = originLocation[0].getGeoCode().getLatitude();
+    Double originAirporLongitude = originLocation[0].getGeoCode().getLongitude();
+    String originTimeZoneOffset = originLocation[0].getTimeZoneOffset();
       
+    Double destinationAirporLatitude = destinationLocation[0].getGeoCode().getLatitude();
+    Double destinationAirporLongitude = destinationLocation[0].getGeoCode().getLongitude();
+    String destinationTimeZoneOffset = destinationLocation[0].getTimeZoneOffset();
+
+    String onTimePrediction = null;      
     String baggageClaim = null;
-      // segment.addProperty("baggageClaim", flight.getLegs()[0].getBaggageClaim());
-    String originAirporLatitude = null;
-      // segment.addProperty("originAirporLatitude", flight.getLegs()[0].getOrigin().getLatitude());
-    String originAirporLongitude = null;
-      // segment.addProperty("originAirporLongitude", flight.getLegs()[0].getOrigin().getLongitude());
-      
-    String destinationAirporLatitude = null;
-      // segment.addProperty("destinationAirporLatitude", flight.getLegs()[0].getDestination().getLatitude());
-    String destinationAirporLongitude = null;
-      // segment.addProperty("destinationAirporLongitude", flight.getLegs()[0].getDestination().getLongitude());
-      
-    String originTimeZoneOffset = null;
-      // segment.addProperty("originTimeZoneOffset", flight.);
-    String destinationTimeZoneOffset = null;
-      // segment.addProperty("destinationTimeZoneOffset", flight.getLegs()[0].getDestination().getTimeZoneOffset());
     boolean isDelayed = false;
-      // segment.addProperty("isDelayed", flight.getLegs()[0].getIsDelayed());
-      
-      
+
     return new SegmentResponse(
       dateTime,
       airline,
@@ -106,6 +111,7 @@ public class FlightAPI {
       );
   }
 
+  //turns a Trip Request into a Trip Reponse
   public TripResponse createTripResponse(SegmentResponse[] segments) {
 
     String tripOriginCode = segments[0].origin();
@@ -113,25 +119,23 @@ public class FlightAPI {
     
     String tripOriginCity = null;
     String tripDestinationCity = null;
-    // try {
-    //   var originLocation = amadeus.referenceData.location(tripOriginCode).get();
-    //   tripOriginCity = originLocation.getDetailedName();
-
-    //   var destinationLocation = amadeus.referenceData.location(tripDestinationCode).get();
-    //   tripDestinationCity = destinationLocation.getDetailedName();
-    // } catch (ResponseException e) {
-    //   System.out.println("[FlightAPI.TripResponse] an error has occured: " + e.getDescription());
-    //   return null;
-    // }
 
 
     var layoverAirports = new String[segments.length-1];
     for(int i = 0; i < segments.length-1; i++) {
       layoverAirports[i] =  segments[i+1].origin();
     }
-
+    
     String tripStartDateTime = segments[0].dateTime();
-    String checkInLink = null;
+    
+    CheckinLink[] checkinLinks;
+    try {
+      checkinLinks = amadeus.referenceData.urls.checkinLinks.get(Params.with("airlineCode", tripOriginCode));
+    } catch (ResponseException e) {
+      System.out.println("[FlightAPI.createTripResponse] an error has occured: " + e.getMessage());
+      return null;
+    }
+    String checkInLink = (checkinLinks.length == 0) ? noValueString : checkinLinks[0].getHref();
 
     return new TripResponse(
       tripOriginCode,
