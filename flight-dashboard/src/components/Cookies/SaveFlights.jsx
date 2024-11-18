@@ -7,7 +7,7 @@ export default function saveFlightList () {
     // have to save all of the segments
     let trips = [];
     trip.map((item) => {
-        item.trips.map((details, tripIndex) => {
+        item.trips.map((details) => {
             let values = [];
             details.segments.map((segment) => {
                 const code = airlineCodes.find((element) => {

@@ -4,7 +4,7 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import BaseCard from "./components/FlightCard/BaseCard";
 import AddTrip from "./components/AddFlight/AddTrip";
 import trip from "./components/AddFlight/trip";
-import saveFlightList from "./components/Cookies/SaveFlights";
+import saveFlightList, { getTripsCookie } from "./components/Cookies/SaveFlights";
 import React from 'react'
 
 function App() {
@@ -15,6 +15,7 @@ function App() {
 
   React.useEffect(() => {
     saveFlightList();
+    console.log(getTripsCookie());
   }, []);
 
   const theme = createTheme({
