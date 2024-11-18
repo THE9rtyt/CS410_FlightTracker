@@ -4,12 +4,18 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import BaseCard from "./components/FlightCard/BaseCard";
 import AddTrip from "./components/AddFlight/AddTrip";
 import trip from "./components/AddFlight/trip";
+import saveFlightList from "./components/Cookies/SaveFlights";
+import React from 'react'
 
 function App() {
   /* State to control AddFlight popover */
   const [isAddFlightOpen, setIsAddFlightOpen] = useState(false);
   const openAddFlight = () => setIsAddFlightOpen(true);
   const closeAddFlight = () => setIsAddFlightOpen(false);
+
+  React.useEffect(() => {
+    saveFlightList();
+  }, []);
 
   const theme = createTheme({
     palette: {

@@ -15,22 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.data_objects.CookieData;
 
 import org.springframework.web.bind.annotation.RequestParam;
-
-
-class CookieData {
-    public long duration;
-    public long timestamp;
-    public String value;
-
-    public CookieData (long duration, long timestamp, String value) {
-        this.duration = duration;
-        this.timestamp = timestamp;
-        this.value = value;
-    }
-}
-
 
 @RestController
 public class CookieController {

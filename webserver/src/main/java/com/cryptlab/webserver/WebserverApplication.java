@@ -11,7 +11,8 @@ public class WebserverApplication {
 	private static Amadeus amadeus;
 
 	public static void main(String[] args) {
-    amadeus = Amadeus
+
+    	amadeus = Amadeus
         .builder(System.getenv())
         .build();
 
