@@ -11,8 +11,14 @@ public class WebserverApplication {
 	private static Amadeus amadeus;
 
 	public static void main(String[] args) {
+<<<<<<< HEAD
     amadeus = Amadeus
         .builder("G8qpyMu4vioUmUXTYhvZ0Vq9kOdzIiE9", "neAAKuCcevzchzzM")
+=======
+
+    	amadeus = Amadeus
+        .builder(System.getenv())
+>>>>>>> origin
         .build();
 
 		SpringApplication.run(WebserverApplication.class, args);

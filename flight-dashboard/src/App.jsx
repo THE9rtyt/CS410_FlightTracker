@@ -4,6 +4,8 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import BaseCard from "./components/FlightCard/BaseCard";
 import AddTrip from "./components/AddFlight/AddTrip";
 import trip from "./components/AddFlight/trip";
+import saveFlightList, { getTripsCookie } from "./components/Cookies/SaveFlights";
+import React from "react";
 
 function App() {
   const theme = createTheme({
@@ -31,6 +33,12 @@ function App() {
   /* State for trips */
   const [trips, setTrips] = useState({ trips: [] });
   const [fetchedData, setFetchedData] = useState(null);
+
+  // For cookies
+  React.useEffect(() => {
+    saveFlightList();
+    console.log(getTripsCookie());
+  }, []);
 
   // Function to fetch data from the API
   useEffect(() => {

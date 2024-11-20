@@ -77,6 +77,10 @@ const airlineCodes = [
     iataCode: "NH",
   },
   {
+    airlineName: "ANA",
+    iataCode: "NH",
+  },
+  {
     airlineName: "American Airlines",
     iataCode: "AA",
   },

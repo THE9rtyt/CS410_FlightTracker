@@ -35,17 +35,22 @@ public class FlightBookingAPI {
         }
     }
 
+    public FlightOrder bookFlight(FlightOfferSearch flightOfferSearch) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'bookFlight'");
+    }
+
     /**
      * Books a flight based on the selected flight offer.
      * @param flightOffer The flight offer to book.
      * @return FlightOrder with booking details if successful.
      */
-    public FlightOrder bookFlight(FlightOfferSearch flightOffer) {
+    /* public FlightOrder bookFlight(FlightOfferSearch flightOffer) {
         try {
             return amadeus.booking.flightOrders.post(flightOffer);
         } catch (ResponseException e) {
             e.printStackTrace();
             return null;
         }
-    }
+    } */
 }
