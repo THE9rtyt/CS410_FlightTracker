@@ -2,9 +2,6 @@ import { Button, Divider } from "@mui/material";
 import aircraft from "./Aircraft";
 
 export default function Segment({ segments }) {
-  // console.log(aircraft.segment.aircraftType);
-
-  console.log(aircraft.ac);
   return (
     <>
       {segments.map((segment, index) => (

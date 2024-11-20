@@ -86,7 +86,6 @@ function App() {
             isAddFlightOpen={isAddFlightOpen}
             closeAddFlight={closeAddFlight}
             setTrips={setTrips}
-            // setSegments={setSegments}
           />
         </div>
       </ThemeProvider>
