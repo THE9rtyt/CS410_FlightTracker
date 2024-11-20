@@ -1,6 +1,10 @@
 import { Button, Divider } from "@mui/material";
+import aircraft from "./Aircraft";
 
 export default function Segment({ segments }) {
+  // console.log(aircraft.segment.aircraftType);
+
+  console.log(aircraft.ac);
   return (
     <>
       {segments.map((segment, index) => (
@@ -12,7 +16,7 @@ export default function Segment({ segments }) {
           </h3>
           <p>Flight {segment.flightNumber}</p>
           <p>{segment.aircraftType}</p>
-          <p>{segment.duration}</p>
+          <p>{segment.duration.replace("PT", "")}</p>
           <div className="flex min-w-full justify-between mt-4">
             <div className="flex flex-col h-36 justify-between">
               <div className="">

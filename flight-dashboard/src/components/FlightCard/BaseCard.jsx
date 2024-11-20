@@ -9,13 +9,15 @@ export default function BaseCard({ tripDetails, segments }) {
   const year = flightDatetime.getFullYear();
   const flightDate = `${month}-${day}-${year}`;
   const currentDatetime = new Date();
+  const originCity = tripDetails.tripOriginCity.split(":");
+  const destinationCity = tripDetails.tripDestinationCity.split(":");
   return (
-    <div className="flex flex-col w-80 bg-gray-100 border shadow-sm rounded-sm p-6">
+    <div className="flex flex-col w-96 bg-gray-100 border shadow-sm rounded-sm p-6">
       <h3 className="font-semibold font-mono text-lg text-center">{flightDate}</h3>
       <div className="flex font-bold justify-center gap-2 mb-6">
-        <p>{tripDetails.tripOriginCity}</p>
+        <p>{originCity[0].replaceAll("/", ", ")}</p>
         <p className="font-normal">to</p>
-        <p>{tripDetails.tripDestinationCity}</p>
+        <p>{destinationCity[0].replaceAll("/", ", ")}</p>
       </div>
       <div className="flex justify-around py-2 border-y">
         <p className="text-black">{tripDetails.tripOriginCode}</p>

@@ -1,10 +1,31 @@
 import { Button } from "@mui/material";
 import AddFlightList from "./AddFlight";
+import { useState } from "react";
 
-export default function AddTrip(props) {
+export default function AddTrip({ isAddFlightOpen, closeAddFlight, setTrips, setSegments }) {
+  /* State to hold temp values */
+  const [selectedAirline, setSelectedAirline] = useState([]);
+  const [selectedFlightNumber, setSelectedFlightNumber] = useState([]);
+  const [selectedDate, setSelectedDate] = useState([]);
+
+  const handleAddTripClick = () => {
+    const newFlights = selectedAirline.map((airline, index) => ({
+      airlineIATA: airline,
+      flightNumber: selectedFlightNumber[index],
+      departureDate: selectedDate[index],
+    }));
+    closeAddFlight();
+    setSelectedAirline([]);
+    setSelectedFlightNumber([]);
+    setSelectedDate([]);
+
+    setTrips((prevState) => ({
+      trips: [...prevState.trips, { segments: [...newFlights] }],
+    }));
+  };
   return (
     <>
-      {props.isAddFlightOpen && (
+      {isAddFlightOpen && (
         <div className="fixed top-0 left-0 z-10 bg-gray-900/50 w-screen h-screen">
           <div
             id="addFlightDialog"
@@ -12,12 +33,19 @@ export default function AddTrip(props) {
           >
             <h1 className="font-semibold text-lg text-center">Add a trip</h1>
             <div className="flex flex-col gap-4 p-4">
-              <AddFlightList />
+              <AddFlightList
+                selectedAirline={selectedAirline}
+                setSelectedAirline={setSelectedAirline}
+                selectedFlightNumber={selectedFlightNumber}
+                setSelectedFlightNumber={setSelectedFlightNumber}
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+              />
               <div className="flex justify-center gap-4">
-                <Button variant="outlined" onClick={props.closeAddFlight}>
+                <Button variant="outlined" onClick={closeAddFlight}>
                   Close
                 </Button>
-                <Button variant="contained" onClick={props.closeAddFlight}>
+                <Button variant="contained" onClick={handleAddTripClick}>
                   Add trip
                 </Button>
               </div>

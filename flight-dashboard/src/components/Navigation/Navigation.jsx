@@ -12,7 +12,7 @@ export default function Navigation(props) {
       <div className="flex items-center">
         <div className="invisible md:visible">
           <Button variant="contained" onClick={props.openAddFlight}>
-            Add flight
+            Add trip
           </Button>
         </div>
         <div className="invisible md:visible">
