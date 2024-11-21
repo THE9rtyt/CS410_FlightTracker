@@ -77,8 +77,8 @@ public class FlightAPI {
     // trip origin and destination information
     String tripOriginCode = airports[0].getIataCode();
     String tripDestinationCode = airports[airports.length-1].getIataCode();
-    String tripOriginCity = airports[0].getDetailedName();
-    String tripDestinationCity = airports[airports.length-1].getDetailedName();
+    String tripOriginCity = airports[0].getAddress().getCityName() + " " + airports[0].getAddress().getCountryCode();
+    String tripDestinationCity = airports[airports.length-1].getAddress().getCityName() + " " + airports[airports.length-1].getAddress().getCountryCode();
 
     // build layover array from airports but only the inside ones
     var layoverAirports = new String[airports.length-2];
