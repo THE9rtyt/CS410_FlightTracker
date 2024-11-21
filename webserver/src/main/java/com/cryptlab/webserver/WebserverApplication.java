@@ -13,7 +13,7 @@ public class WebserverApplication {
 	public static void main(String[] args) {
 
     	amadeus = Amadeus
-        .builder("G8qpyMu4vioUmUXTYhvZ0Vq9kOdzIiE9", "neAAKuCcevzchzzM")
+        .builder("Add API Key Here")
         .build();
 
 		SpringApplication.run(WebserverApplication.class, args);
