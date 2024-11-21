@@ -9,15 +9,22 @@ export default function BaseCard({ tripDetails, segments }) {
   const year = flightDatetime.getFullYear();
   const flightDate = `${month}-${day}-${year}`;
   const currentDatetime = new Date();
-  const originCity = tripDetails.tripOriginCity.split(":");
-  const destinationCity = tripDetails.tripDestinationCity.split(":");
+  const originCity = tripDetails.tripOriginCity.split(" ");
+  console.log(originCity);
+  const destinationCity = tripDetails.tripDestinationCity.split(" ");
   return (
     <div className="flex flex-col w-96 bg-gray-100 border shadow-sm rounded-sm p-6">
       <h3 className="font-semibold font-mono text-lg text-center">{flightDate}</h3>
-      <div className="flex font-bold justify-center gap-2 mb-6">
-        <p>{originCity[0].replaceAll("/", ", ")}</p>
-        <p className="font-normal">to</p>
-        <p>{destinationCity[0].replaceAll("/", ", ")}</p>
+      <div className="flex font-bold justify-center gap-6 mt-2 mb-6">
+        <div className="flex flex-col justify-start text-center">
+          <p>{originCity[0]}</p>
+          <p className="font-medium text-gray-700">{originCity[1]}</p>
+        </div>
+        <p className="font-normal self-center">to</p>
+        <div className="flex flex-col justify-start text-center">
+          <p>{destinationCity[0]}</p>
+          <p className="font-medium text-gray-700">{destinationCity[1]}</p>
+        </div>
       </div>
       <div className="flex justify-around py-2 border-y">
         <p className="text-black">{tripDetails.tripOriginCode}</p>
