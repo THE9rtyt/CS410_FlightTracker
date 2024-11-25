@@ -19,9 +19,17 @@ export default function AddTrip({ isAddFlightOpen, closeAddFlight, setTrips, set
     setSelectedFlightNumber([]);
     setSelectedDate([]);
 
-    setTrips((prevState) => ({
-      trips: [...prevState.trips, { segments: [...newFlights] }],
-    }));
+    setTrips((prevState) => {
+      if (prevState) {
+        return {
+          trips: [...prevState.trips, { segments: [...newFlights] }],
+        }
+      }
+      // if prevstate doesn't exist we just populate with new segment data
+      return {
+        trips: [{ segments: [...newFlights] }],
+      }
+      });
   };
   return (
     <>

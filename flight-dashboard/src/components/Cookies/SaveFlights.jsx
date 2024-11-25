@@ -1,32 +1,36 @@
-import trip from "../AddFlight/trip";
-import airlineCodes from "../AddFlight/airlineCodes";
 import Cookies from 'js-cookie'
 
 
-export default function saveFlightList () {
+export default function saveFlightList (trip) {
     // have to save all of the segments
     let trips = [];
-    trip.map((item) => {
-        item.trips.map((details) => {
-            let values = [];
-            details.segments.map((segment) => {
-                const code = airlineCodes.find((element) => {
-                    return segment.airline === element.airlineName;
-                });
-                if (code) {
-                    const { iataCode } = code;
-                    const { flightNumber, dateTime } = segment;
-                    values.push({ iataCode, flightNumber, dateTime });
-                }
+    // console.log(trip);
+    trip.trips.map((item) => {
+        if (item && item.segments) {
+            let values = { segments: [] };
+            item.segments.map((segment) => {
+                const { airlineIATA, flightNumber, departureDate } = segment;
+                values.segments.push({ airlineIATA, flightNumber, departureDate });
             });
             trips.push(values);
-            
-        });
+        }
     });
+    // console.log(trips);
     Cookies.set('trips', JSON.stringify(trips));
+    // console.log(getTripsCookie());
 }
 
 
 export function getTripsCookie () {
-    return JSON.parse(Cookies.get('trips'));
+    let out = undefined;
+    try {
+        out = {trips: JSON.parse(Cookies.get('trips'))}; 
+    } catch (syntaxError) {
+        console.error('Couldn\' parse trips cookie!');
+    }
+    return out; 
+}
+
+export function clearTripsCookie () {
+    Cookies.set('trips', JSON.stringify( {trips: '' } ));
 }

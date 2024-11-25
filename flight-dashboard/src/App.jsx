@@ -3,7 +3,6 @@ import Navigation from "./components/Navigation/Navigation";
 import { ThemeProvider, createTheme } from "@mui/material";
 import BaseCard from "./components/FlightCard/BaseCard";
 import AddTrip from "./components/AddFlight/AddTrip";
-import trip from "./components/AddFlight/trip";
 import saveFlightList, { getTripsCookie } from "./components/Cookies/SaveFlights";
 import React from "react";
 
@@ -36,10 +35,10 @@ function App() {
 
   // For cookies
   React.useEffect(() => {
-    saveFlightList();
-    console.log(getTripsCookie());
+      setTrips(getTripsCookie());
+      // console.log(trips);
+      // console.log(getTripsCookie());
   }, []);
-
   // Function to fetch data from the API
   useEffect(() => {
     const fetchFlightData = async () => {
@@ -60,8 +59,10 @@ function App() {
     if (
       trips &&
       Array.isArray(trips.trips) &&
-      trips.trips.some((trip) => Array.isArray(trip.segments) && trip.segments.length > 0)
+      trips.trips.length > 0
     ) {
+     // console.log(trips);
+      saveFlightList(trips);
       fetchFlightData();
     }
   }, [trips]);
@@ -71,11 +72,11 @@ function App() {
       <ThemeProvider theme={theme}>
         <div className="flex flex-col items-center h-screen w-screen flex-grow">
           <div className="w-full border-b-2">
-            <Navigation openAddFlight={openAddFlight} />
+            <Navigation openAddFlight={openAddFlight} setTrips={setTrips} />
           </div>
           <h1 className="font-bold text-4xl mt-6 text-indigo-900">Upcoming trips</h1>
           <div className="flex flex-col md:flex-row mt-8 max-w-xs md:max-w-7xl gap-12">
-            {fetchedData ? (
+            {fetchedData && fetchedData.trips && fetchedData.trips.length > 0 ? (
               fetchedData.trips.map((tripDetails, tripIndex) => (
                 <BaseCard
                   key={tripIndex}
