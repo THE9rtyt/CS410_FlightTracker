@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2024-10-07" view-index="0" gantt-divider-location="323" resource-divider-location="300" version="3.3.3312" locale="en_US">
+<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2024-10-10" view-index="0" gantt-divider-location="308" resource-divider-location="300" version="3.3.3312" locale="en_US">
     <description/>
     <view zooming-state="default:2" id="gantt-chart">
-        <field id="tpd3" name="Name" width="171" order="0"/>
+        <field id="tpd3" name="Name" width="156" order="0"/>
         <field id="tpd4" name="Begin date" width="75" order="1"/>
         <field id="tpd5" name="End date" width="75" order="2"/>
         <field id="tpd15" name="Notes" width="20" order="3"/>
@@ -44,11 +44,12 @@
         <task id="3" uid="b0367b4dd56e4eaf8ea23a8a42b131ed" name="use case" meeting="false" start="2024-10-04" duration="1" complete="50" expand="true"/>
         <task id="1" uid="c84105cf8dc3410fac880ee05109542b" name="Skeleton GUI code" meeting="false" start="2024-10-09" duration="7" complete="100" expand="true"/>
         <task id="5" uid="4fe8d4c1b26e4e1caea2f150510e3884" name="Framework and documentation for terminal map" meeting="false" start="2024-10-22" duration="7" complete="0" expand="true"/>
-        <task id="6" uid="d85761d617464450a002fe5ffab55dd6" name="Cookie" meeting="false" start="2024-10-22" duration="7" complete="0" expand="true"/>
-        <task id="7" uid="cb5adce6bbad442e95bba2fc50d1298c" name="Booking" meeting="false" start="2024-10-22" duration="19" complete="0" expand="true">
+        <task id="6" uid="d85761d617464450a002fe5ffab55dd6" name="Cookie" meeting="false" start="2024-10-22" duration="7" complete="90" expand="true"/>
+        <task id="7" uid="cb5adce6bbad442e95bba2fc50d1298c" name="Booking" meeting="false" start="2024-10-22" duration="19" complete="70" expand="true">
             <notes><![CDATA[Figure out how to book flights for the app]]></notes>
         </task>
-        <task id="8" uid="4f9db7b817bb41b9aa13978199692ff8" name="Input Flight ID output flight info" meeting="false" start="2024-10-22" duration="7" complete="0" expand="true"/>
+        <task id="8" uid="4f9db7b817bb41b9aa13978199692ff8" name="Input Flight ID output flight info" meeting="false" start="2024-10-22" duration="19" complete="100" expand="true"/>
+        <task id="9" uid="292e48a9fb6a4262a69f05d30349b718" name="Integration" meeting="false" start="2024-11-18" duration="13" complete="0" expand="true"/>
     </tasks>
     <resources>
         <resource id="0" name="Jacob" function="Default:0" contacts="" phone=""/>
@@ -60,11 +61,16 @@
     <allocations>
         <allocation task-id="0" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="7" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="9" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="1" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="9" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="2" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="5" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="9" resource-id="2" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="6" resource-id="3" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="9" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="8" resource-id="4" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="9" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
     </allocations>
     <vacations/>
     <previous/>
