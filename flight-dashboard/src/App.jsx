@@ -36,8 +36,6 @@ function App() {
   // For cookies
   React.useEffect(() => {
       setTrips(getTripsCookie());
-      // console.log(trips);
-      // console.log(getTripsCookie());
   }, []);
   // Function to fetch data from the API
   useEffect(() => {
@@ -51,7 +49,13 @@ function App() {
           body: JSON.stringify({ trips: trips.trips }),
         });
         const data = await response.json();
-        setFetchedData(data);
+        const realData = { trips: [] };
+        data.trips.map((item) => {
+          if (item !== null) {
+            realData.trips.push(item);
+          }
+        });
+        setFetchedData(realData);
       } catch (error) {
         console.error("Error fetching flight data:", error);
       }
@@ -61,7 +65,6 @@ function App() {
       Array.isArray(trips.trips) &&
       trips.trips.length > 0
     ) {
-     // console.log(trips);
       saveFlightList(trips);
       fetchFlightData();
     }
@@ -72,7 +75,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <div className="flex flex-col items-center h-screen w-screen flex-grow">
           <div className="w-full border-b-2">
-            <Navigation openAddFlight={openAddFlight} setTrips={setTrips} />
+            <Navigation openAddFlight={openAddFlight} setTrips={setTrips} setFetchedData={setFetchedData} />
           </div>
           <h1 className="font-bold text-4xl mt-6 text-indigo-900">Upcoming trips</h1>
           <div className="flex flex-col md:flex-row mt-8 max-w-xs md:max-w-7xl gap-12">

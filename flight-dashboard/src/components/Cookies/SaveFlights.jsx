@@ -4,7 +4,6 @@ import Cookies from 'js-cookie'
 export default function saveFlightList (trip) {
     // have to save all of the segments
     let trips = [];
-    // console.log(trip);
     trip.trips.map((item) => {
         if (item && item.segments) {
             let values = { segments: [] };
@@ -15,9 +14,7 @@ export default function saveFlightList (trip) {
             trips.push(values);
         }
     });
-    // console.log(trips);
     Cookies.set('trips', JSON.stringify(trips));
-    // console.log(getTripsCookie());
 }
 
 
@@ -32,5 +29,5 @@ export function getTripsCookie () {
 }
 
 export function clearTripsCookie () {
-    Cookies.set('trips', JSON.stringify( {trips: '' } ));
+    Cookies.set('trips', JSON.stringify( {trips: [] } ));
 }

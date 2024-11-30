@@ -4,7 +4,7 @@ import MobileMenu from "./MobileMenu";
 import { Button } from "@mui/material";
 
 export default function Navigation(props) {
-  const { setTrips } = props;
+  const { setTrips, setFetchedData } = props;
   return (
     <div className="flex flex-row w-full py-4 px-12 justify-between items-center">
       <div className="flex gap-2 items-center md:items-end">
@@ -18,7 +18,10 @@ export default function Navigation(props) {
           </Button>
         </div>
         <div className="invisible md:visible">
-          <Button onClick={ () => { clearTripsCookie(); setTrips( {trips: []} ); } }>Clear all</Button>
+          <Button onClick={ () => { clearTripsCookie(); setTrips( {trips: []} ); setFetchedData(null); } }>Clear all</Button>
+        </div>
+        <div className="invisible md:visible">
+          <Button>Book Flight</Button>
         </div>
         <div className="visible md:invisible">
           <MobileMenu openAddFlight={props.openAddFlight} />
