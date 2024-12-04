@@ -1,6 +1,7 @@
 import { Button, Divider } from "@mui/material";
 import aircraft from "./Aircraft";
 import airlineCodes from "../AddFlight/airlineCodes";
+import { openMap } from "../AirportMap/AirportMap";
 
 export default function Segment({ segments }) {
   const ac = aircraft.find((item) => item.code === segments.aircraftType)?.aircraft;
@@ -32,7 +33,7 @@ export default function Segment({ segments }) {
                 <p>On time: {segment.onTimePrediction}%</p>
               </div>
               <div className="">
-                <Button variant="outlined" size="small" onclick="openLink()">
+                <Button variant="outlined" size="small" onClick={() => {openMap(segment.origin)}}>
                   Map
                 </Button>
               </div>
@@ -46,7 +47,7 @@ export default function Segment({ segments }) {
                 <p>Carousel {segment.baggageClaim}</p>
               </div>
               <div className="">
-                <Button variant="outlined" size="small" href={segment.checkInLink} onclick="openLink()">
+                <Button variant="outlined" size="small" href={segment.checkInLink} onClick={() => {openMap(segment.destination)}}>
                   Map
                 </Button>
               </div>
