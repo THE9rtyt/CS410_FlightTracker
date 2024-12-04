@@ -32,7 +32,7 @@ export default function Segment({ segments }) {
                 <p>On time: {segment.onTimePrediction}%</p>
               </div>
               <div className="">
-                <Button variant="outlined" size="small">
+                <Button variant="outlined" size="small" onclick="openLink()">
                   Map
                 </Button>
               </div>
@@ -46,7 +46,7 @@ export default function Segment({ segments }) {
                 <p>Carousel {segment.baggageClaim}</p>
               </div>
               <div className="">
-                <Button variant="outlined" size="small" href={segment.checkInLink}>
+                <Button variant="outlined" size="small" href={segment.checkInLink} onclick="openLink()">
                   Map
                 </Button>
               </div>
